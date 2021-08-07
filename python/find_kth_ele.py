@@ -1,7 +1,14 @@
+"""
+Select kth largest/smallest ele from random num array.
+Method 1: Sort (used min/max heap sort)
+Method 2: Quick Select
+Method 3: Medium of Mediums
+"""
+
 import time
 import random as rand
 
-
+#### Method 1 ####
 # create minheap
 def minheap(arr, root_index, max_index):
     size = max_index
@@ -76,31 +83,71 @@ def heapsort_findk(arr, k):
             # print(arr)
             return arr[list_size]
 
+#### End of Method 1 ####
+
+#### Method 2 ####
+
+def quick_select(array, k):
+    size = len(array)
+    # quick sort sorts the array from smallest to largest. Therefore, the index of the kth largest ele is size - k
+    answer_index = size - k
+
+    low = 0
+    high = size -1
+    partition_index = partition(array, low, high)
+    while partition_index != answer_index:
+        if partition_index < answer_index:
+            partition_index = partition(array, partition_index + 1, high)
+        else : # partition_index > answer_index
+            partition_index = partition(array, low, partition_index - 1)
+    
+    return array[answer_index]
+
+def partition(array, left, right):
+    # assumption: right is always the pivot index
+    pivotValue = array[right]
+
+    # i finds the largest value in the array
+    i = left
+    for j in range(left,right):
+        if array[j] <= pivotValue:
+            # this shifts the largest known value from left side with a smaller value on the right side relative to the pivotValue
+            array[i], array[j] = array[j], array[i]
+            i += 1
+
+    # we then put the i value to the most right, and the i index location gets the right most value, which is it's correct pos
+    array[i], array[right] = array[right], array[i]
+    return i
+
+#### End of Method 2 ####
 
 
 def main():
     # create random number set
-    n = 10000000000000
+    n = 1000
     question_array = [ rand.randint(-1*n, n) for x in  range(1,n) ]
     # print(question_array)
 
     # testing if min/max heap works
     # for i in range(len(arr) // 2 - 1, -1, -1):
-    #     # minheap(arr, i)
+    #     minheap(arr, i)
     #     maxheap(arr, i)
     # print(arr)
 
     # test heapsort
-    # arr = question_array.copy()
-    # heapsort(arr)
-    # print(arr)
+    arr = question_array.copy()
+    heapsort(arr)
+    print(arr)
 
     # Q: find kth largest ele from random unsorted list
+    k = 2
     start = time.process_time()
     print("start time: {}".format(start))
     arr1 = question_array.copy()
-    k = 2
-    print(heapsort_findk(arr1, k))
+    # method 1
+    # print(heapsort_findk(arr1, k))
+    # method 2
+    print(quick_select(arr1, k))
     end = time.process_time()
     print("end time: {}".format(end))
     print(end - start)
