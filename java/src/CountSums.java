@@ -1,26 +1,24 @@
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 
 public class CountSums {
     public int count_sums(int[] array, int sums) {
         int count = 0;
 
         // setup hashset for quick access
-        HashSet<Integer> data = new HashSet<>();
+        HashMap<Integer, Integer> data = new HashMap<>();
         for (int i = 0; i < array.length; i++) {
-            data.add(array[i]);
+            data.put(array[i], 0);
+
         }
 
-        ArrayList<Integer> seen = new ArrayList<>();
         for (int j = 0; j < array.length; j++) {
             int b = sums - array[j];
-            if (seen.contains(array[j]))
+            if (data.get(array[j]) == 1)
                 continue;
-            if (data.contains(b)) {
+            else if (data.containsKey(b)) {
                 count++;
-                seen.add(b);
+                data.put(b, 1);
             }
-
         }
 
         return count;
